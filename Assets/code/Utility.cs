@@ -29,6 +29,8 @@ public class Utility
     //
     #region Function
     //
+    public delegate void Function();
+    //
     public static float Random()
     {
         float u = UnityEngine.Random.Range(0f, 1f);
@@ -158,6 +160,22 @@ public class Utility
             Debug.LogException(ex);
             return null;
         }
+    }
+    //
+    public static IEnumerator MoveTo(GameObject go, Vector3 startPos, Vector3 targetPos, Utility.Function func, float speed = 1f, float waitTime = 0f)
+    {
+        go.transform.localPosition = startPos;
+        float time = (targetPos - startPos).magnitude / speed;
+        float curTime = 0f;
+        while (curTime < time)
+        {
+            go.transform.localPosition = Vector3.Lerp(startPos, targetPos, curTime / time);
+            curTime += 1f;
+            yield return null;
+        }
+        go.transform.localPosition = targetPos;
+        func();
+        yield break;
     }
     #endregion
 }

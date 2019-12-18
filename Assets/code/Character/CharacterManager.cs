@@ -19,6 +19,14 @@ public class CharacterManager : MonoBehaviour
     //
     public void AddCharacter(CharacterType characterType)
     {
-        Data.Instance.CharacterList.Add(Data.Instance.CharacterInfo[characterType].Copy());
+        GameObject go = Instantiate(Utility.LoadPrefab("Prefab/Character"), transform);
+        Character newCharacter = go.GetComponent<Character>();
+        newCharacter = Data.Instance.CharacterInfo[characterType].CopyData(newCharacter);
+        Data.Instance.CharacterList.Add(newCharacter);
+    }
+    //
+    public void StartGame(Character character_1, Character character_2)
+    {
+
     }
 }
