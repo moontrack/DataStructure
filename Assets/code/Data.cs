@@ -51,11 +51,11 @@ public class Data : MonoBehaviour
         set => characterList = value;
     }
     //
-    private Dictionary<string, string> globalStatus;
+    private Dictionary<GameStatus, string> globalStatus;
     /// <summary>
     /// 全局角色使用属性
     /// </summary>
-    public Dictionary<string, string> GlobalStatus 
+    public Dictionary<GameStatus, string> GlobalStatus 
     { 
         get
         {

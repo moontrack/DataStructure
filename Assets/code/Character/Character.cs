@@ -19,9 +19,9 @@ public class Character : MonoBehaviour
     public string SpritePath;
     #endregion
     #region Status
-    //属性有 犯错率，对方上一次的操作，总共对局次数，是否开始移动，是否发现可以对局的人，是否正在进行博弈，当前的钱数，探测半径，进行对局半径
+    //属性有 犯错率，对方上一次的操作，总共对局次数，是否开始移动，是否发现可以对局的人，是否正在进行博弈，当前的钱数，探测半径，进行对局半径，已经对局过的人
     private float mistakeRate;
-    private CharacterAction LastOppAction = CharacterAction.Null;
+    private CharacterAction lastOppAction = CharacterAction.Null;
     private int gameNumber = 0;
     private bool isMoving = false;
     private bool isFindTarget = false;
@@ -29,9 +29,10 @@ public class Character : MonoBehaviour
     private int curMoney = 0;
     private float visibleRange = 500f;
     private float gameRange = 50;
+    private List<Character> playedCharacter;
     //
     public float MistakeRate { get => mistakeRate; set => mistakeRate = value; }
-    public CharacterAction LastOppAction1 { get => LastOppAction; set => LastOppAction = value; }
+    public CharacterAction LastOppAction { get => lastOppAction; set => lastOppAction = value; }
     public int GameNumber { get => gameNumber; set => gameNumber = value; }
     public bool IsMoving { get => isMoving; set => isMoving = value; }
     public bool IsFindTarget { get => isFindTarget; set => isFindTarget = value; }
@@ -39,6 +40,16 @@ public class Character : MonoBehaviour
     public int CurMoney { get => curMoney; set => curMoney = value; }
     public float VisibleRange { get => visibleRange; set => visibleRange = value; }
     public float GameRange { get => gameRange; set => gameRange = value; }
+    public List<Character> PlayedCharacter
+    {
+        get
+        {
+            if (playedCharacter == null)
+                playedCharacter = new List<Character>();
+            return playedCharacter;
+        }
+        set => playedCharacter = value;
+    }
     #endregion
     private void Start()
     {
@@ -127,6 +138,7 @@ public class Character : MonoBehaviour
                     this.IsPlayingGame = true;
                     TargetCharacter.GetComponent<Character>().IsMoving = false;
                     TargetCharacter.GetComponent<Character>().IsPlayingGame = true;
+                    CharacterLayer.GetComponent<CharacterManager>().StartGame(this, TargetCharacter.GetComponent<Character>());
                 }
                 #endregion
             }
@@ -138,6 +150,11 @@ public class Character : MonoBehaviour
     /// <returns></returns>
     public CharacterAction GetAction()
     {
+        switch (Type)
+        {
+            case CharacterType.Repeater:
+                return LastOppAction;
+        }
         return CharacterAction.Null;
     }
     /// <summary>
@@ -178,7 +195,7 @@ public class Character : MonoBehaviour
         float minDis = VisibleRange;
         foreach (var item in Data.Instance.CharacterList)
         {
-            if (item == this || item.IsMoving == false)
+            if (item == this || item.IsMoving == false || this.PlayedCharacter.Contains(item))
                 continue;
             if ((item.transform.localPosition - this.transform.localPosition).magnitude < minDis) 
             {

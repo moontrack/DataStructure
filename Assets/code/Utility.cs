@@ -18,6 +18,12 @@ public enum CharacterAction
     Cooperate,
     Null,
 }
+//
+public enum GameStatus
+{
+    LossMoney,
+    ReturnMoney,
+}
 #endregion
 
 public class Utility
@@ -84,17 +90,25 @@ public class Utility
         }
     }
     //
-    public static Dictionary<string, string> LoadInitialStatus(string path)
+    public static Dictionary<GameStatus, string> LoadInitialStatus(string path)
     {
         try
         {
-            Dictionary<string, string> retVal = new Dictionary<string, string>();
+            Dictionary<GameStatus, string> retVal = new Dictionary<GameStatus, string>();
             var script = LoadScript(path);
             var title = script[0].Split(',');
             var data = script[1].Split(',');
             for (int i = 0; i < title.Length; i++)
             {
-                retVal.Add(title[i], data[i]);
+                switch (title[i])
+                {
+                    case "LossMoney":
+                        retVal.Add(GameStatus.LossMoney, data[i]);
+                        break;
+                    case "ReturnMoney":
+                        retVal.Add(GameStatus.ReturnMoney, data[i]);
+                        break;
+                }
             }
             return retVal;
         }
@@ -161,7 +175,16 @@ public class Utility
             return null;
         }
     }
-    //
+    /// <summary>
+    /// 将一个物体从一点移动到另一点
+    /// </summary>
+    /// <param name="go"></param>
+    /// <param name="startPos"></param>
+    /// <param name="targetPos"></param>
+    /// <param name="func"></param>
+    /// <param name="speed"></param>
+    /// <param name="waitTime"></param>
+    /// <returns></returns>
     public static IEnumerator MoveTo(GameObject go, Vector3 startPos, Vector3 targetPos, Utility.Function func, float speed = 1f, float waitTime = 0f)
     {
         go.transform.localPosition = startPos;
@@ -174,6 +197,18 @@ public class Utility
             yield return null;
         }
         go.transform.localPosition = targetPos;
+        func();
+        yield break;
+    }
+    /// <summary>
+    /// 等待一段时间后执行函数
+    /// </summary>
+    /// <param name="func"></param>
+    /// <param name="waitTile"></param>
+    /// <returns></returns>
+    public static IEnumerator WaitTimeToInvoke(Function func, float waitTime = 1f)
+    {
+        yield return new WaitForSeconds(waitTime);
         func();
         yield break;
     }
