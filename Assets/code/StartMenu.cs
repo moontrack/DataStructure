@@ -18,6 +18,10 @@ public class StartMenu : MonoBehaviour
     private GameObject Scene0_0, Scene0_1;
     private List<GameObject> Scene0 = new List<GameObject>();
 
+    //场景1
+    private GameObject Scene1_0, Scene1_1_0t, Scene1_1_1c, Scene1_2_0xt, Scene1_2_1xc;
+    private List<GameObject> Scene1 = new List<GameObject>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,13 +45,25 @@ public class StartMenu : MonoBehaviour
         Scene.Add(o7);
         tool = GameObject.Find("ToolBar");
         tool.SetActive(true);
-        OnRender(Scene, 0);
+        
 
         //场景0渲染初始化
         Scene0_0 = GameObject.Find("0_0");
         Scene0.Add(Scene0_0);
         Scene0_1 = GameObject.Find("0_1");
         Scene0.Add(Scene0_1);
+
+        //场景1渲染初始化
+        Scene1_0 = GameObject.Find("1_0");
+        Scene1.Add(Scene1_0);
+        Scene1_1_0t = GameObject.Find("1_1_0t");
+        Scene1.Add(Scene1_1_0t);
+        Scene1_1_1c = GameObject.Find("1_1_1c");
+        Scene1.Add(Scene1_1_1c);
+        Scene1_2_0xt = GameObject.Find("1_2_0xt");
+        Scene1.Add(Scene1_2_0xt);
+        Scene1_2_1xc = GameObject.Find("1_2_1xc");
+        Scene1.Add(Scene1_2_1xc);
 
         //声音区块
         audiosource = gameObject.AddComponent<AudioSource>();
@@ -85,8 +101,31 @@ public class StartMenu : MonoBehaviour
                 this.OnClick0(btnobject);
             });
         }
-        OnRender(Scene0, 0);
+        
 
+        //场景1按钮
+        List<string> btnsName1 = new List<string>();
+        btnsName1.Add("TrickButton1");
+        btnsName1.Add("TrickButton2");
+        btnsName1.Add("TrickButton3");
+        btnsName1.Add("NextButton1");
+        btnsName1.Add("CooperateButton1");
+        btnsName1.Add("CooperateButton2");
+        btnsName1.Add("CooperateButton3");
+        btnsName1.Add("NextButton2");
+        foreach (string _ in btnsName1)
+        {
+            GameObject btnobject = GameObject.Find(_);
+            Button btn = btnobject.GetComponent<Button>();
+            btn.onClick.AddListener(delegate ()
+            {
+                this.OnClick1(btnobject);
+            });
+        }
+
+        //初始化激活场景，先激活场景0，在激活0中的0；以后切换场景都这么做，先激活大的，在激活小的
+        OnRender(Scene, 0);
+        OnRender(Scene0, 0);
     }
 
     // Update is called once per frame
@@ -155,17 +194,63 @@ public class StartMenu : MonoBehaviour
                 break;
         }
     }
+
+    //场景0的点击处理
     public void OnClick0(GameObject sender)
     {
         switch (sender.name)
         {
             case "StartButton1":
                 Debug.Log("0_0");
-                OnRender(Scene0,1);
+                OnRender(Scene0, 1);
                 break;
             case "StartButton2":
                 Debug.Log("0_1");
                 OnRender(Scene, 1);
+                OnRender(Scene1, 0);
+                break;
+            default:
+                Debug.Log("none");
+                break;
+        }
+    }
+    //场景1的点击处理
+    public void OnClick1(GameObject sender)
+    {
+        //Scene1_0, Scene1_1_0t, Scene1_1_1c, Scene1_2_0xt, Scene1_2_1xc;
+        switch (sender.name)
+        {
+            case "TrickButton1":
+                Debug.Log("TrickButton1");
+                OnRender(Scene1, 1);
+                break;
+            case "CooperateButton1":
+                Debug.Log("CooperateButton1");
+                OnRender(Scene1, 2);
+                break;
+            case "TrickButton2":
+                Debug.Log("TrickButton2");
+                OnRender(Scene1, 3);
+                break;
+            case "CooperateButton2":
+                Debug.Log("CooperateButton2");
+                OnRender(Scene1, 4);
+                break;
+            case "TrickButton3":
+                Debug.Log("TrickButton3");
+                OnRender(Scene1, 3);
+                break;
+            case "CooperateButton3":
+                Debug.Log("CooperateButton3");
+                OnRender(Scene1, 4);
+                break;
+            case "NextButton1":
+                Debug.Log("NextButton1");
+                //OnRender(Scene1, );
+                break;
+            case "NextButton2":
+                Debug.Log("NextButton2");
+                //OnRender(Scene1, );
                 break;
             default:
                 Debug.Log("none");
