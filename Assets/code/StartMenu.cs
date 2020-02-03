@@ -22,6 +22,20 @@ public class StartMenu : MonoBehaviour
     private GameObject Scene1_0, Scene1_1_0t, Scene1_1_1c, Scene1_2_0xt, Scene1_2_1xc;
     private List<GameObject> Scene1 = new List<GameObject>();
 
+    //场景2
+    private GameObject Scene2_0, Scene2_1, Scene2_2;
+    private List<GameObject> Scene2 = new List<GameObject>();
+
+    private int RoundNum, ClickNum;
+    private List<int> Choose = new List<int>();
+    private bool PlayerYellowFlag;
+
+    private Text TextScore1, TextScore2, TextRoundNum, TextFinalScore;
+    private int ScorePerRound1, ScorePerRound2, TotalScore;
+
+    private Image Player2;
+    private Sprite sp;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -64,6 +78,14 @@ public class StartMenu : MonoBehaviour
         Scene1.Add(Scene1_2_0xt);
         Scene1_2_1xc = GameObject.Find("1_2_1xc");
         Scene1.Add(Scene1_2_1xc);
+
+        //场景2渲染初始化Scene2_0, Scene2_1;
+        Scene2_0 = GameObject.Find("2_0");
+        Scene2.Add(Scene2_0);
+        Scene2_1 = GameObject.Find("2_1");
+        Scene2.Add(Scene2_1);
+        Scene2_2 = GameObject.Find("2_2");
+        Scene2.Add(Scene2_2);
 
         //声音区块
         audiosource = gameObject.AddComponent<AudioSource>();
@@ -122,6 +144,41 @@ public class StartMenu : MonoBehaviour
                 this.OnClick1(btnobject);
             });
         }
+
+        //场景2按钮
+        List<string> btnsName2 = new List<string>();
+        btnsName2.Add("TrickButton4");
+        btnsName2.Add("CooperateButton4");
+        btnsName2.Add("NextButton3");
+        btnsName2.Add("NextButton4");
+        foreach (string _ in btnsName2)
+        {
+            GameObject btnobject = GameObject.Find(_);
+            Button btn = btnobject.GetComponent<Button>();
+            btn.onClick.AddListener(delegate ()
+            {
+                this.OnClick2(btnobject);
+            });
+        }
+
+        //场景二文本显示初始化TextScore1, TextScore2, TextRoundNum;
+        TextScore1 = GameObject.Find("Score1").GetComponent<Text>();
+        TextScore2 = GameObject.Find("Score2").GetComponent<Text>();
+        TextRoundNum = GameObject.Find("RoundNum").GetComponent<Text>();
+        TextFinalScore = GameObject.Find("FinalScore").GetComponent<Text>();
+        Player2 = GameObject.Find("imgPlayer4").GetComponent<Image>();
+        TextScore1.text = "0";
+        TextScore2.text = "0";
+        TextRoundNum.text = "第1/5个对手" +
+            "你的总分0";
+
+        //场景2数据初始化
+        RoundNum = 1;
+        ClickNum = 0;
+        PlayerYellowFlag = false;//开始没有被骗
+        ScorePerRound1 = 0;//开始的时候玩家积分为0
+        ScorePerRound2 = 0;//开始的时候电脑积分为0
+        TotalScore = 0;
 
         //初始化激活场景，先激活场景0，在激活0中的0；以后切换场景都这么做，先激活大的，在激活小的
         OnRender(Scene, 0);
@@ -246,17 +303,220 @@ public class StartMenu : MonoBehaviour
                 break;
             case "NextButton1":
                 Debug.Log("NextButton1");
-                //OnRender(Scene1, );
+                OnRender(Scene, 2);
+                OnRender(Scene2, 0);
                 break;
             case "NextButton2":
                 Debug.Log("NextButton2");
-                //OnRender(Scene1, );
+                OnRender(Scene, 2);
+                OnRender(Scene2, 0);
                 break;
             default:
                 Debug.Log("none");
                 break;
         }
     }
+
+    //场景2的点击处理
+    public void OnClick2(GameObject sender)
+    {
+        switch (sender.name)
+        {
+            case "TrickButton4":
+                Debug.Log("TrickButton4");
+                Choose.Add(0);
+                ClickNum += 1;
+                Solve2(0);                
+                break;
+            case "CooperateButton4":
+                Debug.Log("CooperateButton4");
+                Choose.Add(1);
+                ClickNum += 1;
+                Solve2(1);               
+                break;
+            case "NextButton3":
+                Debug.Log("NextButton3");
+                OnRender(Scene2, 1);
+                break;
+            case "NextButton4":
+                Debug.Log("NextButton4");
+                //进入场景3
+                //OnRender(Scene2, 1);
+                break;
+            default:
+                Debug.Log("none");
+                break;
+        }
+    }
+
+    //场景2的运算,0代表欺骗，1代表合作
+    public void Solve2(int act)
+    {
+        switch (RoundNum)
+        {
+            case 1:
+                Debug.Log("in case1");
+                JudgeResult(act, PlayerBlue());               
+                break;
+            case 2:
+                Debug.Log("in case2");
+                JudgeResult(act, PlayerPurple());
+                break;
+            case 3:
+                Debug.Log("in case3");
+                JudgeResult(act, PlayerPink());
+                break;
+            case 4:
+                Debug.Log("in case4");
+                JudgeResult(act, PlayerYellow());
+                break;
+            case 5:
+                Debug.Log("in case5");
+                JudgeResult(act, PlayerOrange());
+                break;
+            default:
+                Debug.Log("none");
+                break;
+        }
+
+        if (RoundNum == 5 && ClickNum == 5)
+        {
+            //进入下一场景
+            OnRender(Scene2, 2);
+            TextFinalScore.text = TotalScore.ToString();
+        }
+        else if (ClickNum == 5)
+        {
+            ClickNum = 0;
+            RoundNum += 1;
+            TotalScore += ScorePerRound1;
+            ScorePerRound1 = ScorePerRound2 = 0;
+            switch (RoundNum)
+            {
+                case 2:
+                    sp = Resources.Load("Images/ui/PlayerPurple", typeof(Sprite)) as Sprite;
+                    Player2.sprite = sp;
+                    break;
+                case 3:
+                    sp = Resources.Load("Images/ui/PlayerPink", typeof(Sprite)) as Sprite;
+                    Player2.sprite = sp;
+                    break;
+                case 4:
+                    sp = Resources.Load("Images/ui/PlayerYellow", typeof(Sprite)) as Sprite;
+                    Player2.sprite = sp;
+                    break;
+                case 5:
+                    sp = Resources.Load("Images/ui/PlayerOrange", typeof(Sprite)) as Sprite;
+                    Player2.sprite = sp;
+                    break;
+                default:
+                    Debug.Log("none");
+                    break;
+            }
+            ShowScore();
+
+            //这里应当放一段动画，要不最后一次显示不出来
+            //System.Threading.Thread.Sleep(1000);这样不行
+        }
+    }
+    public int PlayerBlue()
+    {
+        if (ClickNum == 1)
+        {
+            return 1;
+        }
+        else
+        {
+            return Choose[ClickNum - 2];
+        }
+    }
+    public int PlayerPink()
+    {
+        return 1;
+    }
+    public int PlayerPurple()
+    {
+        return 0;
+    }
+    public int PlayerYellow()
+    {
+        if (ClickNum == 1)
+        {
+            return 1;
+        }
+        else if(PlayerYellowFlag == true)
+        {
+            return 0;
+        }
+        else
+        {
+            if( Choose[ClickNum - 1] == 0)
+            {
+                PlayerYellowFlag = true;
+            }
+        }
+        return 1;
+    }
+    public int PlayerOrange()
+    {
+        if (ClickNum == 1)
+        {
+            return 1;
+        }
+        else if(ClickNum == 2)
+        {
+            return 0;
+        }
+        else
+        {
+            if(Choose[2]==0)
+            {
+                PlayerBlue();
+            }
+            else
+            {
+                PlayerPurple();
+            }
+        }
+        return 1;
+    }
+    public void JudgeResult(int Player1,int Player2)
+    {
+        if(Player1 == 0 && Player2 == 0)
+        {
+            ScorePerRound1 += 0;
+            ScorePerRound2 += 0;
+            //两者都欺骗，不加分
+        }
+        else if(Player1 == 0 && Player2 == 1)
+        {
+            //玩家欺骗，电脑合作，玩家+3，电脑-1
+            ScorePerRound1 += 3;
+            ScorePerRound2 -= 1;
+        }
+        else if (Player1 == 1 && Player2 == 0)
+        {
+            //玩家合作，电脑欺骗，玩家-1，电脑+3
+            ScorePerRound1 -= 1;
+            ScorePerRound2 += 3;
+        }
+        else
+        {
+            //都合作，都+2
+            ScorePerRound1 += 2;
+            ScorePerRound2 += 2;
+        }
+        ShowScore();
+    }
+    public void ShowScore()
+    {
+        TextScore1.text = ScorePerRound1.ToString();
+        TextScore2.text = ScorePerRound2.ToString();
+        TextRoundNum.text = "第" + RoundNum + "/5个对手" +
+            "你的总分" + TotalScore;
+    }
+
+    //控制场景的显示
     public void OnRender(List<GameObject> Scene,int index)
     {
         for(int i=0;i<Scene.Count;i++)
