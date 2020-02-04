@@ -36,6 +36,13 @@ public class StartMenu : MonoBehaviour
     private Image Player2, Payoff;
     private Sprite spPlayer, spPayoff;
 
+    //场景3
+    private GameObject Scene3_0, Scene3_1, Scene3_2, Scene3_3, Scene3_4, Scene3_5, Scene3_6, Scene3_7, Scene3_8, Scene3_9, Scene3_10, Scene3_11, Scene3_12;
+    private List<GameObject> Scene3 = new List<GameObject>();
+
+    private int ChoiceNum;
+    private Text TextName1, TextName2;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -86,6 +93,34 @@ public class StartMenu : MonoBehaviour
         Scene2.Add(Scene2_1);
         Scene2_2 = GameObject.Find("2_2");
         Scene2.Add(Scene2_2);
+
+        //场景3渲染初始化
+        Scene3_0 = GameObject.Find("3_0");
+        Scene3.Add(Scene3_0);
+        Scene3_1 = GameObject.Find("3_1");
+        Scene3.Add(Scene3_1);
+        Scene3_2 = GameObject.Find("3_2");
+        Scene3.Add(Scene3_2);
+        Scene3_3 = GameObject.Find("3_3");
+        Scene3.Add(Scene3_3);
+        Scene3_4 = GameObject.Find("3_4");
+        Scene3.Add(Scene3_4);
+        Scene3_5 = GameObject.Find("3_5");
+        Scene3.Add(Scene3_5);
+        Scene3_6 = GameObject.Find("3_6");
+        Scene3.Add(Scene3_6);
+        Scene3_7 = GameObject.Find("3_7");
+        Scene3.Add(Scene3_7);
+        Scene3_8 = GameObject.Find("3_8");
+        Scene3.Add(Scene3_8);
+        Scene3_9 = GameObject.Find("3_9");
+        Scene3.Add(Scene3_9);
+        Scene3_10 = GameObject.Find("3_10");
+        Scene3.Add(Scene3_10);
+        Scene3_11 = GameObject.Find("3_11");
+        Scene3.Add(Scene3_11);
+        Scene3_12 = GameObject.Find("3_12");
+        Scene3.Add(Scene3_12);
 
         //声音区块
         audiosource = gameObject.AddComponent<AudioSource>();
@@ -182,6 +217,46 @@ public class StartMenu : MonoBehaviour
         ScorePerRound2 = 0;//开始的时候电脑积分为0
         TotalScore = 0;
 
+        //场景3按钮
+        List<string> btnsName3 = new List<string>();
+        btnsName3.Add("ChoiceButton1");
+        btnsName3.Add("ChoiceButton2");
+        btnsName3.Add("ChoiceButton3");
+        btnsName3.Add("ChoiceButton4");
+        btnsName3.Add("ChoiceButton5");
+        btnsName3.Add("NextButton5");
+        btnsName3.Add("NextButton6");
+        btnsName3.Add("NextButton7");
+        btnsName3.Add("NextButton8");
+        btnsName3.Add("NextButton9");
+        btnsName3.Add("NextButton10");
+        btnsName3.Add("NextButton11");
+        btnsName3.Add("NextButton12");
+        btnsName3.Add("NextButton13");
+        btnsName3.Add("NextButton14");
+        btnsName3.Add("NextButton15");
+        btnsName3.Add("NextButton16");
+        foreach (string _ in btnsName3)
+        {
+            GameObject btnobject = GameObject.Find(_);
+            Button btn = btnobject.GetComponent<Button>();
+            btn.onClick.AddListener(delegate ()
+            {
+                this.OnClick3(btnobject);
+            });
+        }
+
+        //场景二文本显示初始化
+        TextName1 = GameObject.Find("Name1").GetComponent<Text>();
+        TextName2 = GameObject.Find("Name2").GetComponent<Text>();
+        TextName1.text = "复读机";
+        TextName2.text = "复读机";
+        //场景3数据初始化
+        //1--复读机，2-万年小粉红，3-千年老油条，4-黑帮老铁，5-福尔摩星
+        ChoiceNum = 0;
+
+
+
         //初始化激活场景，先激活场景0，在激活0中的0；以后切换场景都这么做，先激活大的，在激活小的
         OnRender(Scene, 0);
         OnRender(Scene0, 0);
@@ -254,6 +329,7 @@ public class StartMenu : MonoBehaviour
         }
     }
 
+    #region Scene0
     //场景0的点击处理
     public void OnClick0(GameObject sender)
     {
@@ -273,6 +349,8 @@ public class StartMenu : MonoBehaviour
                 break;
         }
     }
+    #endregion Scene0
+    #region Scene1
     //场景1的点击处理
     public void OnClick1(GameObject sender)
     {
@@ -320,6 +398,8 @@ public class StartMenu : MonoBehaviour
                 break;
         }
     }
+    #endregion Scene1
+    #region Scene2
     //场景2初始化
     public void iniScene2()
     {
@@ -356,14 +436,15 @@ public class StartMenu : MonoBehaviour
             case "NextButton4":
                 Debug.Log("NextButton4");
                 //进入场景3
-                //OnRender(Scene2, 1);
+                OnRender(Scene, 3);
+                OnRender(Scene3, 0);
                 break;
             default:
                 Debug.Log("none");
                 break;
         }
     }
-
+    
     //场景2的运算,0代表欺骗，1代表合作
     public void Solve2(int act)
     {
@@ -428,12 +509,13 @@ public class StartMenu : MonoBehaviour
                     Debug.Log("none");
                     break;
             }
-            ShowScore();
+            Scene2ShowScore();
 
             //这里应当放一段动画，要不最后一次显示不出来
             //System.Threading.Thread.Sleep(1000);这样不行
         }
     }
+    #region PlayerStrategyScene2
     public int PlayerBlue()
     {
         if (ClickNum == 1)
@@ -503,6 +585,7 @@ public class StartMenu : MonoBehaviour
         }
         return 1;
     }
+    #endregion PlayerStrategyScene2
     public void JudgeResult(int Player1,int Player2)
     {
         if(Player1 == 0 && Player2 == 0)
@@ -532,16 +615,144 @@ public class StartMenu : MonoBehaviour
             ScorePerRound1 += 2;
             ScorePerRound2 += 2;
             Payoff.sprite = Resources.Load("Images/ui/payoffs4", typeof(Sprite)) as Sprite;
+            //还有一种写法Payoff.sprite = Resources.Load<Sprite>("Images/ui/payoffs4"）
         }
-        ShowScore();
+        Scene2ShowScore();
     }
-    public void ShowScore()
+    public void Scene2ShowScore()
     {
         TextScore1.text = ScorePerRound1.ToString();
         TextScore2.text = ScorePerRound2.ToString();
         TextRoundNum.text = "第" + RoundNum + "/5个对手" +
             "你的总分" + TotalScore;
     }
+    #endregion Scene2
+    #region Scene3
+    public void OnClick3(GameObject sender)
+    {
+        switch (sender.name)
+        {
+            case "ChoiceButton1":
+                Debug.Log("ChoiceButton1");
+                ChoiceNum = 1;
+                Scene3ShowChoiceNmae();
+                OnRender(Scene3, 1);
+                break;
+            case "ChoiceButton2":
+                Debug.Log("ChoiceButton2");
+                ChoiceNum = 2;
+                Scene3ShowChoiceNmae();
+                OnRender(Scene3, 1);
+                break;
+            case "ChoiceButton3":
+                Debug.Log("ChoiceButton3");
+                ChoiceNum = 3;
+                Scene3ShowChoiceNmae();
+                OnRender(Scene3, 1);
+                break;
+            case "ChoiceButton4":
+                Debug.Log("ChoiceButton4");
+                ChoiceNum = 4;
+                Scene3ShowChoiceNmae();
+                OnRender(Scene3, 1);
+                break;
+            case "ChoiceButton5":
+                Debug.Log("ChoiceButton5");
+                ChoiceNum = 5;
+                Scene3ShowChoiceNmae();
+                OnRender(Scene3, 1);
+                break;
+            case "NextButton5":
+                Debug.Log("NextButton5");
+                OnRender(Scene3, 2);
+                break;
+            case "NextButton6":
+                Debug.Log("NextButton6");
+                OnRender(Scene3, 3);
+                break;
+            case "NextButton7":
+                Debug.Log("NextButton7");
+                OnRender(Scene3, 4);
+                break;
+            case "NextButton8":
+                Debug.Log("NextButton8");
+                OnRender(Scene3, 5);
+                break;
+            case "NextButton9":
+                Debug.Log("NextButton9");
+                OnRender(Scene3, 6);
+                break;
+            case "NextButton10":
+                Debug.Log("NextButton10");
+                OnRender(Scene3, 7);
+                break;
+            case "NextButton11":
+                Debug.Log("NextButton11");
+                OnRender(Scene3, 8);
+                break;
+            case "NextButton12":
+                Debug.Log("NextButton12");
+                OnRender(Scene3, 9);
+                break;
+            case "NextButton13":
+                Debug.Log("NextButton13");
+                OnRender(Scene3, 10);
+                break;
+            case "NextButton14":
+                Debug.Log("NextButton14");
+                OnRender(Scene3, 11);
+                break;
+            case "NextButton15":
+                Debug.Log("NextButton15");
+                OnRender(Scene3, 12);
+                break;
+            case "NextButton16":
+                Debug.Log("NextButton16");
+                //进入场景4
+                
+                break;
+            default:
+                Debug.Log("none");
+                break;
+        }
+
+    }
+
+    public void Scene3ShowChoiceNmae()
+    {
+        switch (ChoiceNum)
+        {
+            case 1:
+                Debug.Log("in case 1 Scene3");
+                TextName1.text = "<color=#007FFF>复读机</color>";
+                TextName2.text = "<color=#007FFF>复读机!</color>" + "  恭喜你答对啦!!!";
+                break;
+            case 2:
+                Debug.Log("in case 2 Scene3");
+                TextName1.text = "<color=#FF6EC7>万年小粉红</color>";
+                TextName2.text = "<color=#007FFF>复读机!</color>" + "  (对不住啦，<color=#FF6EC7>万年小粉红</color>。)";
+                break;
+            case 3:
+                Debug.Log("in case 3 Scene3");
+                TextName1.text = "<color=#9932CD>千年老油条</color>";
+                TextName2.text = "<color=#007FFF>复读机!</color>" + "  (对不住啦，<color=#9932CD>千年老油条</color>。)";
+                break;
+            case 4:
+                Debug.Log("in case 4 Scene3");
+                TextName1.text = "<color=yellow>黑帮老铁</color>";
+                TextName2.text = "<color=#007FFF>复读机!</color>" + "  (对不住啦，<color=yellow>黑帮老铁</color>。)";
+                break;
+            case 5:
+                Debug.Log("in case 5 Scene3");
+                TextName1.text = "<color=#D98719>福尔摩星儿</color>";
+                TextName2.text = "<color=#007FFF>复读机!</color>" + "  (对不住啦，<color=#D98719>福尔摩星儿</color>。)";
+                break;
+            default:
+                Debug.Log("none");
+                break;
+        }
+    }
+    #endregion Scene3
 
     //控制场景的显示
     public void OnRender(List<GameObject> Scene,int index)
