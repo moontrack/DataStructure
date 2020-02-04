@@ -33,8 +33,8 @@ public class StartMenu : MonoBehaviour
     private Text TextScore1, TextScore2, TextRoundNum, TextFinalScore;
     private int ScorePerRound1, ScorePerRound2, TotalScore;
 
-    private Image Player2;
-    private Sprite sp;
+    private Image Player2, Payoff;
+    private Sprite spPlayer, spPayoff;
 
     // Start is called before the first frame update
     void Start()
@@ -167,11 +167,13 @@ public class StartMenu : MonoBehaviour
         TextRoundNum = GameObject.Find("RoundNum").GetComponent<Text>();
         TextFinalScore = GameObject.Find("FinalScore").GetComponent<Text>();
         Player2 = GameObject.Find("imgPlayer4").GetComponent<Image>();
+        //这里很有意思，只有通过绝对路径才能找到
+        Payoff = GameObject.Find("Canvas/2MultiplePlay/2_1/imgPayoff").GetComponent<Image>();
         TextScore1.text = "0";
         TextScore2.text = "0";
         TextRoundNum.text = "第1/5个对手" +
             "你的总分0";
-
+        
         //场景2数据初始化
         RoundNum = 1;
         ClickNum = 0;
@@ -305,16 +307,29 @@ public class StartMenu : MonoBehaviour
                 Debug.Log("NextButton1");
                 OnRender(Scene, 2);
                 OnRender(Scene2, 0);
+                iniScene2();
                 break;
             case "NextButton2":
                 Debug.Log("NextButton2");
                 OnRender(Scene, 2);
                 OnRender(Scene2, 0);
+                iniScene2();
                 break;
             default:
                 Debug.Log("none");
                 break;
         }
+    }
+    //场景2初始化
+    public void iniScene2()
+    {
+        //场景2数据初始化
+        RoundNum = 1;
+        ClickNum = 0;
+        PlayerYellowFlag = false;//开始没有被骗
+        ScorePerRound1 = 0;//开始的时候玩家积分为0
+        ScorePerRound2 = 0;//开始的时候电脑积分为0
+        TotalScore = 0;
     }
 
     //场景2的点击处理
@@ -394,20 +409,20 @@ public class StartMenu : MonoBehaviour
             switch (RoundNum)
             {
                 case 2:
-                    sp = Resources.Load("Images/ui/PlayerPurple", typeof(Sprite)) as Sprite;
-                    Player2.sprite = sp;
+                    spPlayer = Resources.Load("Images/ui/PlayerPurple", typeof(Sprite)) as Sprite;
+                    Player2.sprite = spPlayer;
                     break;
                 case 3:
-                    sp = Resources.Load("Images/ui/PlayerPink", typeof(Sprite)) as Sprite;
-                    Player2.sprite = sp;
+                    spPlayer = Resources.Load("Images/ui/PlayerPink", typeof(Sprite)) as Sprite;
+                    Player2.sprite = spPlayer;
                     break;
                 case 4:
-                    sp = Resources.Load("Images/ui/PlayerYellow", typeof(Sprite)) as Sprite;
-                    Player2.sprite = sp;
+                    spPlayer = Resources.Load("Images/ui/PlayerYellow", typeof(Sprite)) as Sprite;
+                    Player2.sprite = spPlayer;
                     break;
                 case 5:
-                    sp = Resources.Load("Images/ui/PlayerOrange", typeof(Sprite)) as Sprite;
-                    Player2.sprite = sp;
+                    spPlayer = Resources.Load("Images/ui/PlayerOrange", typeof(Sprite)) as Sprite;
+                    Player2.sprite = spPlayer;
                     break;
                 default:
                     Debug.Log("none");
@@ -467,9 +482,17 @@ public class StartMenu : MonoBehaviour
         {
             return 0;
         }
+        else if (ClickNum == 3)
+        {
+            return 1;
+        }
+        else if (ClickNum == 4)
+        {
+            return 1;
+        }
         else
         {
-            if(Choose[2]==0)
+            if(Choose[3]==0)
             {
                 PlayerBlue();
             }
@@ -484,27 +507,31 @@ public class StartMenu : MonoBehaviour
     {
         if(Player1 == 0 && Player2 == 0)
         {
+            //两者都欺骗，不加分
             ScorePerRound1 += 0;
             ScorePerRound2 += 0;
-            //两者都欺骗，不加分
+            Payoff.sprite = Resources.Load("Images/ui/payoffs7", typeof(Sprite)) as Sprite;
         }
         else if(Player1 == 0 && Player2 == 1)
         {
             //玩家欺骗，电脑合作，玩家+3，电脑-1
             ScorePerRound1 += 3;
             ScorePerRound2 -= 1;
+            Payoff.sprite = Resources.Load("Images/ui/payoffs5", typeof(Sprite)) as Sprite;
         }
         else if (Player1 == 1 && Player2 == 0)
         {
             //玩家合作，电脑欺骗，玩家-1，电脑+3
             ScorePerRound1 -= 1;
             ScorePerRound2 += 3;
+            Payoff.sprite = Resources.Load("Images/ui/payoffs6", typeof(Sprite)) as Sprite;
         }
         else
         {
             //都合作，都+2
             ScorePerRound1 += 2;
             ScorePerRound2 += 2;
+            Payoff.sprite = Resources.Load("Images/ui/payoffs4", typeof(Sprite)) as Sprite;
         }
         ShowScore();
     }
