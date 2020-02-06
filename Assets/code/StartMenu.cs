@@ -40,9 +40,29 @@ public class StartMenu : MonoBehaviour
     private GameObject Scene3_0, Scene3_1, Scene3_2, Scene3_3, Scene3_4, Scene3_5, Scene3_6, Scene3_7, Scene3_8, Scene3_9, Scene3_10, Scene3_11, Scene3_12;
     private List<GameObject> Scene3 = new List<GameObject>();
 
-    private int ChoiceNum;
+    private int ChoiceNumScene3;
     private Text TextName1, TextName2;
 
+    //场景4
+    private GameObject Scene4_0, Scene4_1, Scene4_2, Scene4_3, Scene4_4, Scene4_5;
+    private List<GameObject> Scene4 = new List<GameObject>();
+
+    private int ChoiceNumScene4;
+    private Text TextName3, TextName4, TextName5;
+    private Text TextBox1;
+
+    private Button Button1Scene4, Button2Scene4, Button3Scene4;
+    private Button NextButton22;//让22点击以后失效
+    private Text NextButton24;//更换24的内容
+
+    private int NextButton24ClickNum;
+
+    private Animator ani1, ani2;
+
+    private int ClickNumScene4;
+    private Image imgTemp;
+
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -121,6 +141,20 @@ public class StartMenu : MonoBehaviour
         Scene3.Add(Scene3_11);
         Scene3_12 = GameObject.Find("3_12");
         Scene3.Add(Scene3_12);
+
+        //场景4渲染初始化
+        Scene4_0 = GameObject.Find("4_0");
+        Scene4.Add(Scene4_0);
+        Scene4_1 = GameObject.Find("4_1");
+        Scene4.Add(Scene4_1);
+        Scene4_2 = GameObject.Find("4_2");
+        Scene4.Add(Scene4_2);
+        Scene4_3 = GameObject.Find("4_3");
+        Scene4.Add(Scene4_3);
+        Scene4_4 = GameObject.Find("4_4");
+        Scene4.Add(Scene4_4);
+        Scene4_5 = GameObject.Find("4_5");
+        Scene4.Add(Scene4_5);
 
         //声音区块
         audiosource = gameObject.AddComponent<AudioSource>();
@@ -246,20 +280,84 @@ public class StartMenu : MonoBehaviour
             });
         }
 
-        //场景二文本显示初始化
+            //这里有3个按钮需要特殊处理，因为要控制是否可以点击
+        Button1Scene4 = GameObject.Find("NextButton18").GetComponent<Button>();
+        Button2Scene4 = GameObject.Find("NextButton19").GetComponent<Button>();
+        Button3Scene4 = GameObject.Find("NextButton20").GetComponent<Button>();
+
+        Button1Scene4.interactable = true;
+        Button2Scene4.interactable = false;
+        Button3Scene4.interactable = false;
+
+        //场景3文本显示初始化
         TextName1 = GameObject.Find("Name1").GetComponent<Text>();
         TextName2 = GameObject.Find("Name2").GetComponent<Text>();
         TextName1.text = "复读机";
         TextName2.text = "复读机";
+        
         //场景3数据初始化
         //1--复读机，2-万年小粉红，3-千年老油条，4-黑帮老铁，5-福尔摩星
-        ChoiceNum = 0;
+        ChoiceNumScene3 = 0;
 
+
+        //场景4按钮
+        List<string> btnsName4 = new List<string>();
+        btnsName4.Add("NextButton17");
+        btnsName4.Add("NextButton18");
+        btnsName4.Add("NextButton19");
+        btnsName4.Add("NextButton20");
+        btnsName4.Add("ChoiceButton6");
+        btnsName4.Add("ChoiceButton7");
+        btnsName4.Add("ChoiceButton8");
+        btnsName4.Add("NextButton21");
+        btnsName4.Add("NextButton22");
+        btnsName4.Add("NextButton23");
+        btnsName4.Add("NextButton24");
+        foreach (string _ in btnsName4)
+        {
+            GameObject btnobject = GameObject.Find(_);
+            Button btn = btnobject.GetComponent<Button>();
+            btn.onClick.AddListener(delegate ()
+            {
+                this.OnClick4(btnobject);
+            });
+        }
+
+            //点击NextButton22以后再显示23,且禁用22
+        NextButton22 = GameObject.Find("NextButton22").GetComponent<Button>();
+        //更换24内容
+        NextButton24 = GameObject.Find("NextButton24/Text").GetComponent<Text>();
+
+        //场景4文本显示初始化
+        TextName3 = GameObject.Find("Name3").GetComponent<Text>();
+        TextName3.text = "hello world";
+        TextName4 = GameObject.Find("Name4").GetComponent<Text>();
+        TextName5 = GameObject.Find("Name5").GetComponent<Text>();
+        TextName5.text = "";
+
+        TextBox1 = GameObject.Find("TextBox1").GetComponent<Text>();
+
+        ani1 = GameObject.Find("AnimationBox").GetComponent<Animator>();
+        ani2 = GameObject.Find("AnimationBox2").GetComponent<Animator>();
+
+        imgTemp = GameObject.Find("Canvas/4MutipleGame/4_4/imgTemp").GetComponent<Image>();
+        imgTemp.enabled = true;
+
+        //场景4数据初始化
+            //1--万年小粉红，2-千年老油条，3-复读机
+        ChoiceNumScene4 = 0;
+            //动画按钮点击数量
+        ClickNumScene4 = 0;
+        //按钮24的点击次数，用来切换画面
+        NextButton24ClickNum = 0;
 
 
         //初始化激活场景，先激活场景0，在激活0中的0；以后切换场景都这么做，先激活大的，在激活小的
-        OnRender(Scene, 0);
-        OnRender(Scene0, 0);
+        //OnRender(Scene, 0);
+        //OnRender(Scene0, 0);
+
+        OnRender(Scene, 4);
+        OnRender(Scene4, 0);
     }
 
     // Update is called once per frame
@@ -634,31 +732,31 @@ public class StartMenu : MonoBehaviour
         {
             case "ChoiceButton1":
                 Debug.Log("ChoiceButton1");
-                ChoiceNum = 1;
+                ChoiceNumScene3 = 1;
                 Scene3ShowChoiceNmae();
                 OnRender(Scene3, 1);
                 break;
             case "ChoiceButton2":
                 Debug.Log("ChoiceButton2");
-                ChoiceNum = 2;
+                ChoiceNumScene3 = 2;
                 Scene3ShowChoiceNmae();
                 OnRender(Scene3, 1);
                 break;
             case "ChoiceButton3":
                 Debug.Log("ChoiceButton3");
-                ChoiceNum = 3;
+                ChoiceNumScene3 = 3;
                 Scene3ShowChoiceNmae();
                 OnRender(Scene3, 1);
                 break;
             case "ChoiceButton4":
                 Debug.Log("ChoiceButton4");
-                ChoiceNum = 4;
+                ChoiceNumScene3 = 4;
                 Scene3ShowChoiceNmae();
                 OnRender(Scene3, 1);
                 break;
             case "ChoiceButton5":
                 Debug.Log("ChoiceButton5");
-                ChoiceNum = 5;
+                ChoiceNumScene3 = 5;
                 Scene3ShowChoiceNmae();
                 OnRender(Scene3, 1);
                 break;
@@ -708,19 +806,18 @@ public class StartMenu : MonoBehaviour
                 break;
             case "NextButton16":
                 Debug.Log("NextButton16");
-                //进入场景4
-                
+                OnRender(Scene, 4);
+                OnRender(Scene4, 0);
                 break;
             default:
                 Debug.Log("none");
                 break;
         }
-
     }
 
     public void Scene3ShowChoiceNmae()
     {
-        switch (ChoiceNum)
+        switch (ChoiceNumScene3)
         {
             case 1:
                 Debug.Log("in case 1 Scene3");
@@ -753,7 +850,185 @@ public class StartMenu : MonoBehaviour
         }
     }
     #endregion Scene3
+    #region Scene4
+    public void OnClick4(GameObject sender)
+    {
+        switch (sender.name)
+        {
+            case "ChoiceButton6":
+                Debug.Log("ChoiceButton6");
+                ChoiceNumScene4 = 1;
+                Scene4ShowChoiceNmae();
+                OnRender(Scene4, 2);
+                break;
+            case "ChoiceButton7":
+                Debug.Log("ChoiceButton7");
+                ChoiceNumScene4 = 2;
+                Scene4ShowChoiceNmae();
+                OnRender(Scene4, 2);
+                break;
+            case "ChoiceButton8":
+                Debug.Log("ChoiceButton8");
+                ChoiceNumScene4 = 3;
+                Scene4ShowChoiceNmae();
+                OnRender(Scene4, 2);
+                break;
+            case "NextButton17":
+                Debug.Log("NextButton17");
+                OnRender(Scene4, 1);
+                break;
+            case "NextButton18":
+                Debug.Log("NextButton18");
+                ClickNumScene4 += 1;
+                Scene4Evlution();
+                ani1.SetInteger("AnimationNum", ClickNumScene4);
+                Button1Scene4.interactable = false;
+                Button2Scene4.interactable = true;
+                break;
+            case "NextButton19":
+                Debug.Log("NextButton19");
+                ClickNumScene4 += 1;
+                Scene4Evlution();
+                ani1.SetInteger("AnimationNum", ClickNumScene4);
+                Button2Scene4.interactable = false;
+                Button3Scene4.interactable = true;
+                break;
+            case "NextButton20":
+                Debug.Log("NextButton20");
+                ClickNumScene4 += 1;
+                Scene4Evlution();
+                ani1.SetInteger("AnimationNum", ClickNumScene4);
+                Button3Scene4.interactable = false;
+                Button1Scene4.interactable = true;
+                break;
+            case "NextButton21":
+                Debug.Log("NextButton21");
+                OnRender(Scene4, 4);
+                break;
+            case "NextButton22":
+                Debug.Log("NextButton22");
+                TextName5.text = "（注意：有少数<color=yellow>黑帮老铁</color>可能会一直留下来，因为除了<color=yellow>黑帮老铁</color>和<color=#007FFF>复读机</color>之外所有人都被消灭了，他们两个会达成平局。）\n\n" +
+                "所以，看起来博弈论的道理好像在告诉我们这些事情：像<color=#007FFF>复读机</color>这样「己所不欲勿施于人」的人生哲学不仅仅是道德层面上的真理，同时也是科学上的真理。然而...";
+                ani2.SetTrigger("isClicked");
+                NextButton22.interactable = false;
+                imgTemp.enabled = false;
+                break;
+            case "NextButton23":
+                Debug.Log("NextButton23");
+                OnRender(Scene4, 5);
+                TextBox1.text = "看看你周围，这个世界上简直充满了无赖。\n\n"+
 
+                "如果在这个重复的信任游戏中，<color=#007FFF>复读机</color>使用的是这种甚至连一战战壕里的士兵都独立地「进化」出来了的这种被称作「互惠宽容」的强大策略，那么，为什么，这个世界上有那么多不信任别人，以及不值得信任的人？是什么使得「不信任」这种病毒得以如此广泛地传播呢？\n\n" +
+
+                "有一个线索其实就藏在这句话本身「在这个重复的信任游戏中」。到目前为止，我们都只在讨论<b>玩家的变化</b>：但是，如果我们讨论一下这个<b>博弈游戏本身的变化</b>呢？有没有想过，导致不信任的...";
+
+                break;
+            case "NextButton24":
+                Debug.Log("NextButton24");
+                NextButton24ClickNum += 1;
+                if(NextButton24ClickNum == 1)
+                {
+                    NextButton24.text = "而且，如果报酬发生变化...";
+                    TextBox1.text = "如果不进行足够多轮的比赛，（这里是五轮或者更少）老油条就会处于绝对的优势\n\n" +
+
+                    "1985年的调查显示，当美国人被问到他们有多少亲密朋友的时候，最常见的回答是「三个」。而在2014年，这个数字是「零」。现在，我们拥有越来越少不同阶级，不同种族，不同经济状况，不同政治理念的朋友，原因只是因为我们所拥有的朋友数量变少了，仅此而已。而且，刚刚你自己也发现了一个道理，<b>人与人之间越来越少的「重复互动」，所带来的影响就是不信任的加剧扩散。</b>\n\n" +
+
+                    "（不不，大众传媒不算是重复互动：必须是<b>个人与个人</b>之间进行的<b>双向</b>互动才行）";
+                }
+                else if(NextButton24ClickNum == 2)
+                {
+                    NextButton24.text = "犯错!!!";
+                    TextBox1.text = "同样的事情发生了：当「双赢」的报酬被降低，老油条开始处于优势地位。对于这种现象，博弈论里面有两个很恰当的概念可以参考：\n\n"+
+
+                    "<b>「零和游戏」</b>，指的是游戏的双方都悲观的相信己方得到的东西<b>必然</b>来自与对方的失去，反之亦然。\n\n" +
+
+                    "<b>「非零和游戏」</b>，指的是游戏双方都努力创造双赢的局面（或者至少防止双输的出现）！如果没有非零和游戏，人与人之间的信任便<b>不可能</b>得到传播。\n\n" +
+
+                    "说到这儿，咱们来看一下第三个，也是最后一个阻止信任传播的壁垒...";
+                }
+                else
+                {
+                    //进入场景5
+                }
+                break;
+            default:
+                Debug.Log("none");
+                break;
+        }
+    }
+    public void Scene4ShowChoiceNmae()
+    {
+        switch (ChoiceNumScene4)
+        {
+            case 1:
+                Debug.Log("in case 1 Scene4");
+                TextName3.text = "有道理，<color=#FF6EC7>万年小粉红</color>人多力量大嘛... 好，现在看看你选的对不对：";
+                break;
+            case 2:
+                Debug.Log("in case 2 Scene4");
+                TextName3.text = "有道理，<color=#9932CD>千年老油条</color>有这么多万年小粉红可以取剥削... 好，现在看看你选的对不对：";
+                break;
+            case 3:
+                Debug.Log("in case 3 Scene4");
+                TextName3.text = "有道理，<color=#007FFF>复读机!</color>刚刚就赢了嘛，这次怎么会输呢？... 好，现在看看你选的对不对：";
+                break;
+            default:
+                Debug.Log("none");
+                break;
+        }
+    }
+
+    //连续点击进化场景中三个按钮的处理
+    public void Scene4Evlution()
+    {
+        switch (ClickNumScene4)
+        {
+            case 3:
+                Debug.Log("text change 3 in Scene4");
+                if (ChoiceNumScene4 == 1)
+                    TextName3.text = "哎呀，<color=#FF6EC7>小粉红</color>被 老油条给吃了，现在场上还剩十个。 不过，我们再多玩几场试试...";
+                else if (ChoiceNumScene4 == 2)
+                    TextName3.text = "好吧，你赢了！这次<color=#9932CD>老油条</color>获得了胜利，数量增加了五个。 不过，我们再多玩几场试试...";
+                else
+                    TextName3.text = "哎呀，<color=#007FFF>复读机</color>没赢——不过至少比小粉红强一点，他们都被老油条给吃了五个了。 不过，我们再多玩几场试试...";
+                break;
+            case 6:
+                Debug.Log("text change 6 in Scene4");
+                TextName3.text = "随着<color=#FF6EC7>小粉红</color>被五个五个地吃掉，老油条越来越多...";
+                break;
+            case 9:
+                Debug.Log("text change 9 in Scene4");
+                TextName3.text = "现在，<color=#FF6EC7>小粉红</color>们全部被吃掉了。不过，等等...";
+                break;
+            case 12:
+                Debug.Log("text change 12 in Scene4");
+                TextName3.text = "对啦：老油条作茧自缚，变成了受害者！他们剥削完了天真无邪的<color=#FF6EC7>小粉红</color>之后，不得不独自面对<color=#007FFF>复读机</color>了。<color=#007FFF>复读机</color>们虽然人很好，但是他们并不傻。";
+                break;
+            case 15:
+                Debug.Log("text change 15 in Scene4");
+                TextName3.text = "仅仅重复别人动作的<color=#007FFF>复读机</color>可以与他人良好地相处，而自私的老油条们只能骗他们自己！不光如此，当他们需要对阵<color=#007FFF>复读机</color>这种只会以其人之道还治其人之身的人的时候，一定会让老油条们尝到作茧自缚的滋味。";
+                break;
+            case 18:
+                Debug.Log("text change 18 in Scene4");
+                TextName3.text = "所以，结果显然就是...";
+                break;
+            case 21:
+                Debug.Log("text change 21 in Scene4");
+                if (ChoiceNumScene4 == 1)
+                    TextName4.text = "好吧，尽管你猜错了——天真善良的<color=#FF6EC7>小粉红</color>被从一开始就注定在劫难逃——最终，一种聪明的善良蔓延到了整个地球，<color=#9932CD>老油条</color>也灰飞烟灭了。 这让我想到了一句话：";
+                else if (ChoiceNumScene4 == 2)
+                    TextName4.text = "虽然短期内，你是对的——<color=#9932CD>老油条</color>确实赢了前几场，但最终我们看到，当他残酷剥削的本质暴露无遗的同时，也不可避免地跌入了深渊。 这让我想到了一句话：";
+                else
+                    TextName4.text = "所以，长期来看，你是对的——<color=#007FFF>复读机</color>赢了！<color=#9932CD>老油条</color>在短期内确实可能获得胜利，但最终我们看到，当他残酷剥削的本质暴露无遗的同时，也不可避免地跌入了深渊。 这让我想到了一句话：";
+                OnRender(Scene4, 3);
+                break;
+            default:
+                Debug.Log("none");
+                break;
+        }
+    }
+
+    #endregion Scene4
     //控制场景的显示
     public void OnRender(List<GameObject> Scene,int index)
     {
