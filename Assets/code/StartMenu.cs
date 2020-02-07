@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class StartMenu : MonoBehaviour
 {
+    #region Declaration
     private AudioSource audiosource;
 
     //场景
@@ -62,10 +63,24 @@ public class StartMenu : MonoBehaviour
     private int ClickNumScene4;
     private Image imgTemp;
 
-    
+    //场景6
+    private bool Correct6_6, Correct6_7;
+    private Text Text1, Text2, Text3, Text4, Text5, Text6, SliderNumber;
+    private Slider Slider1;
+    private GameObject Scene6_0, Scene6_1, Scene6_2, Scene6_3, Scene6_4, Scene6_5, Scene6_6_0, Scene6_6_1, Scene6_6_2, Scene6_6_3, Scene6_7_0, Scene6_7_1, Scene6_7_2,
+        Scene6_7_3, Scene6_8_0, Scene6_8_1;
+    private List<GameObject> Scene6 = new List<GameObject>();
+
+    //场景8
+    private GameObject Scene8_0, Scene8_1, Scene8_2, Scene8_3;
+    private List<GameObject> Scene8 = new List<GameObject>();
+
+    #endregion Declaration
+
     // Start is called before the first frame update
     void Start()
     {
+        #region iniScene
         //场景渲染初始化
         o0 = GameObject.Find("StartScene");
         Scene.Add(o0);
@@ -155,6 +170,60 @@ public class StartMenu : MonoBehaviour
         Scene4.Add(Scene4_4);
         Scene4_5 = GameObject.Find("4_5");
         Scene4.Add(Scene4_5);
+
+        //场景6渲染初始化
+        Scene6_0 = GameObject.Find("6_0");
+        Scene6.Add(Scene6_0);
+        Scene6_1 = GameObject.Find("6_1");
+        Scene6.Add(Scene6_1);
+        Scene6_2 = GameObject.Find("6_2");
+        Scene6.Add(Scene6_2);
+        Scene6_3 = GameObject.Find("6_3");
+        Scene6.Add(Scene6_3);
+        Scene6_4 = GameObject.Find("6_4");
+        Scene6.Add(Scene6_4);
+        Scene6_5 = GameObject.Find("6_5");
+        Scene6.Add(Scene6_5);
+        //6
+        Scene6_6_0 = GameObject.Find("6_6_0");
+        Scene6.Add(Scene6_6_0);
+        //7
+        Scene6_6_1 = GameObject.Find("6_6_1");
+        Scene6.Add(Scene6_6_1);
+        //8
+        Scene6_6_2 = GameObject.Find("6_6_2");
+        Scene6.Add(Scene6_6_2);
+        //9
+        Scene6_6_3 = GameObject.Find("6_6_3");
+        Scene6.Add(Scene6_6_3);
+        //10
+        Scene6_7_0 = GameObject.Find("6_7_0");
+        Scene6.Add(Scene6_7_0);
+        //11
+        Scene6_7_1 = GameObject.Find("6_7_1");
+        Scene6.Add(Scene6_7_1);
+        //12
+        Scene6_7_2 = GameObject.Find("6_7_2");
+        Scene6.Add(Scene6_7_2);
+        //13
+        Scene6_7_3 = GameObject.Find("6_7_3");
+        Scene6.Add(Scene6_7_3);
+        //14
+        Scene6_8_0 = GameObject.Find("6_8_0");
+        Scene6.Add(Scene6_8_0);
+        //15
+        Scene6_8_1 = GameObject.Find("6_8_1");
+        Scene6.Add(Scene6_8_1);
+
+        //场景8渲染初始化
+        Scene8_0 = GameObject.Find("8_0");
+        Scene8.Add(Scene8_0);
+        Scene8_1 = GameObject.Find("8_1");
+        Scene8.Add(Scene8_1);
+        Scene8_2 = GameObject.Find("8_2");
+        Scene8.Add(Scene8_2);
+        Scene8_3 = GameObject.Find("8_3");
+        Scene8.Add(Scene8_3);
 
         //声音区块
         audiosource = gameObject.AddComponent<AudioSource>();
@@ -348,16 +417,87 @@ public class StartMenu : MonoBehaviour
         ChoiceNumScene4 = 0;
             //动画按钮点击数量
         ClickNumScene4 = 0;
-        //按钮24的点击次数，用来切换画面
+            //按钮24的点击次数，用来切换画面
         NextButton24ClickNum = 0;
 
+
+        //场景6按钮
+        List<string> btnsName6 = new List<string>();
+        btnsName6.Add("NextButton6_0");
+        btnsName6.Add("NextButton6_1");
+        btnsName6.Add("NextButton6_2");
+        btnsName6.Add("NextButton6_3");
+        btnsName6.Add("NextButton6_4");
+        btnsName6.Add("NextButton6_5");
+        btnsName6.Add("NextButton6_6_1");
+        btnsName6.Add("NextButton6_6_2");
+        btnsName6.Add("NextButton6_6_3");
+        btnsName6.Add("NextButton6_7_1");
+        btnsName6.Add("NextButton6_7_2");
+        btnsName6.Add("NextButton6_7_3");
+        btnsName6.Add("NextButton6_8_0");
+        btnsName6.Add("NextButton6_8_1");
+        btnsName6.Add("ChoiceButton6_6_0_1");
+        btnsName6.Add("ChoiceButton6_6_0_2");
+        btnsName6.Add("ChoiceButton6_6_0_3");
+        btnsName6.Add("ChoiceButton6_6_0_4");
+        btnsName6.Add("ChoiceButton6_6_0_5");
+        btnsName6.Add("ChoiceButton6_7_0_1");
+        btnsName6.Add("ChoiceButton6_7_0_2");
+        btnsName6.Add("ChoiceButton6_7_0_3");
+        btnsName6.Add("ChoiceButton6_7_0_4");
+        btnsName6.Add("ChoiceButton6_7_0_5");
+        foreach (string _ in btnsName6)
+        {
+            GameObject btnobject = GameObject.Find(_);
+            Button btn = btnobject.GetComponent<Button>();
+            btn.onClick.AddListener(delegate ()
+            {
+                this.OnClick6(btnobject);
+            });
+        }
+
+        //场景六文本显示初始化
+        Text1 = GameObject.Find("Text1").GetComponent<Text>();
+        Text2 = GameObject.Find("Text2").GetComponent<Text>();
+        Text3 = GameObject.Find("Text3").GetComponent<Text>();
+        Text4 = GameObject.Find("Text4").GetComponent<Text>();
+        Text5 = GameObject.Find("Text5").GetComponent<Text>();
+        Text6 = GameObject.Find("Text6").GetComponent<Text>();
+        SliderNumber = GameObject.Find("SliderNumber").GetComponent<Text>();
+        SliderNumber.text = "0";
+        Text4.text = "<color=#A8D0FF>复读鸭</color>";
+        Text5.text = "<color=#9ce354>一根筋</color>";
+        Text6.text = "<color=#9ce354>一根筋</color>";
+        //6_8_1 滑动条
+        Slider1 = GameObject.Find("Slider1").GetComponent<Slider>();
+        //6_6场景是否选到正确选项
+        Correct6_6 = false;
+        //6_7场景是否选到正确选项
+        Correct6_7 = false;
+
+        //场景8按钮
+        List<string> btnsName8 = new List<string>();
+        btnsName8.Add("NextButton25");
+        btnsName8.Add("NextButton26");
+        btnsName8.Add("NextButton27");
+        foreach (string _ in btnsName8)
+        {
+            GameObject btnobject = GameObject.Find(_);
+            Button btn = btnobject.GetComponent<Button>();
+            btn.onClick.AddListener(delegate ()
+            {
+                this.OnClick8(btnobject);
+            });
+        }
+        #endregion iniScene
 
         //初始化激活场景，先激活场景0，在激活0中的0；以后切换场景都这么做，先激活大的，在激活小的
         //OnRender(Scene, 0);
         //OnRender(Scene0, 0);
 
-        OnRender(Scene, 4);
-        OnRender(Scene4, 0);
+        OnRender(Scene, 0);
+        OnRender(Scene0, 0);
     }
 
     // Update is called once per frame
@@ -366,6 +506,7 @@ public class StartMenu : MonoBehaviour
         
     }
 
+    #region ToolBar
     /// <summary>
     /// 控制开始界面按钮
     /// </summary>
@@ -426,7 +567,7 @@ public class StartMenu : MonoBehaviour
                 break;
         }
     }
-
+    #endregion ToolBar
     #region Scene0
     //场景0的点击处理
     public void OnClick0(GameObject sender)
@@ -1029,6 +1170,181 @@ public class StartMenu : MonoBehaviour
     }
 
     #endregion Scene4
+    #region Scene6
+    public void OnClick6(GameObject sender)
+    {
+        switch (sender.name)
+        {
+            case "NextButton6_0":
+                Debug.Log("Finish 6_0");
+                OnRender(Scene6, 1);
+                break;
+            case "NextButton6_1":
+                Debug.Log("Finish 6_1");
+                OnRender(Scene6, 2);
+                break;
+            case "NextButton6_2":
+                Debug.Log("Finish 6_2");
+                OnRender(Scene6, 3);
+                break;
+            case "NextButton6_3":
+                Debug.Log("Finish 6_3");
+                OnRender(Scene6, 4);
+                break;
+            case "NextButton6_4":
+                Debug.Log("Finish 6_4");
+                OnRender(Scene6, 5);
+                break;
+            case "NextButton6_5":
+                Debug.Log("Finish 6_5");
+                OnRender(Scene6, 6);
+                break;
+            case "NextButton6_6_1":
+                Debug.Log("Finish 6_6_1");
+                if (Correct6_6 == true)
+                {
+                    OnRender(Scene6, 8);
+                }
+                else if (Correct6_6 == false)
+                {
+                    OnRender(Scene6, 9);
+                }
+                break;
+            case "NextButton6_6_2":
+                Debug.Log("Finish 6_6_2");
+                OnRender(Scene6, 10);
+                break;
+            case "NextButton6_6_3":
+                Debug.Log("Finish 6_6_3");
+                OnRender(Scene6, 10);
+                break;
+            case "NextButton6_7_1":
+                Debug.Log("Finish 6_7_1");
+                if (Correct6_7 == true)
+                {
+                    OnRender(Scene6, 12);
+                }
+                else if (Correct6_7 == false)
+                {
+                    OnRender(Scene6, 13);
+                }
+                break;
+            case "NextButton6_7_2":
+                Debug.Log("Finish 6_6_3");
+                OnRender(Scene6, 14);
+                break;
+            case "NextButton6_7_3":
+                Debug.Log("Finish 6_6_3");
+                OnRender(Scene6, 14);
+                break;
+            case "NextButton6_8_0":
+                Debug.Log("Finish 6_8_0");
+                OnRender(Scene6, 15);
+                break;
+            case "NextButton6_8_1":
+                Debug.Log("Finish 6_8_1");
+                OnRender(Scene, 7);
+                break;
+            case "ChoiceButton6_6_0_1":
+                Debug.Log("Finish 6_6_0 with choice 1");
+                Text1.text = Text3.text = "<color=#A8D0FF>复读鸭</color>";
+                Correct6_6 = false;
+                Text1.fontSize = 20;
+                OnRender(Scene6, 7);
+                break;
+            case "ChoiceButton6_6_0_2":
+                Debug.Log("Finish 6_6_0 with choice 2");
+                Text1.text = Text2.text = "<color=#9ce354>一根筋</color>";
+                Correct6_6 = true;
+                Text1.fontSize = 20;
+                OnRender(Scene6, 7);
+                break;
+            case "ChoiceButton6_6_0_3":
+                Debug.Log("Finish 6_6_0 with choice 3");
+                Text1.text = Text3.text = "<color=#ff5e5e>胡乱来</color>";
+                Correct6_6 = false;
+                Text1.fontSize = 20;
+                OnRender(Scene6, 7);
+                break;
+            case "ChoiceButton6_6_0_4":
+                Debug.Log("Finish 6_6_0 with choice 4");
+                Text1.text = Text3.text = "<color=#4089dd>复读机</color>";
+                Correct6_6 = false;
+                Text1.fontSize = 20;
+                OnRender(Scene6, 7);
+                break;
+            case "ChoiceButton6_6_0_5":
+                Debug.Log("Finish 6_6_0 with choice 5");
+                Text1.text = Text3.text = "<color=#ffd3ff>万年小粉红</color>";
+                Text1.fontSize = Text3.fontSize = 12;
+                Correct6_6 = false;
+                OnRender(Scene6, 7);
+                break;
+            case "ChoiceButton6_7_0_1":
+                Debug.Log("Finish 6_7_0 with choice 1");
+                Text4.text = Text5.text = "<color=#A8D0FF>复读鸭</color>";
+                Correct6_7 = true;
+                Text1.fontSize = 20;
+                OnRender(Scene6, 11);
+                break;
+            case "ChoiceButton6_7_0_2":
+                Debug.Log("Finish 6_7_0 with choice 2");
+                Text4.text = Text6.text = "<color=#9ce354>一根筋</color>";
+                Correct6_7 = false;
+                Text1.fontSize = 20;
+                OnRender(Scene6, 11);
+                break;
+            case "ChoiceButton6_7_0_3":
+                Debug.Log("Finish 6_7_0 with choice 3");
+                Text4.text = Text6.text = "<color=#ff5e5e>胡乱来</color>";
+                Correct6_7 = false;
+                Text1.fontSize = 20;
+                OnRender(Scene6, 11);
+                break;
+            case "ChoiceButton6_7_0_4":
+                Debug.Log("Finish 6_7_0 with choice 4");
+                Text4.text = Text6.text = "<color=#4089dd>复读机</color>";
+                Correct6_7 = false;
+                Text1.fontSize = 20;
+                OnRender(Scene6, 11);
+                break;
+            case "ChoiceButton6_7_0_5":
+                Debug.Log("Finish 6_7_0 with choice 5");
+                Text4.text = Text6.text = "<color=#52537f>千年老油条</color>";
+                Text1.fontSize = Text3.fontSize = 12;
+                Correct6_7 = false;
+                OnRender(Scene6, 11);
+                break;
+            default:
+                Debug.Log("None");
+                break;
+        }
+    }
+    #endregion Scene6
+    #region Scene8
+    public void OnClick8(GameObject sender)
+    {
+        switch (sender.name)
+        {
+            case "NextButton25":
+                Debug.Log("NextButton25");
+                OnRender(Scene8, 1);
+                break;
+            case "NextButton26":
+                Debug.Log("NextButton26");
+                OnRender(Scene8, 2);
+                break;
+            case "NextButton27":
+                Debug.Log("NextButton27");
+                OnRender(Scene8, 3);
+                break;
+            default:
+                Debug.Log("none");
+                break;
+        }
+    }
+    #endregion Scene8
+
     //控制场景的显示
     public void OnRender(List<GameObject> Scene,int index)
     {
