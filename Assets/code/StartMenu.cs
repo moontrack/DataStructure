@@ -10,6 +10,12 @@ public class StartMenu : MonoBehaviour
 {
     #region Declaration
     private AudioSource audiosource;
+    private AudioSource asButton1, asButton2, asButton3;
+
+    //ToolBar
+    private Image imgMusicButton, imgButton1, imgButton2, imgButton3, imgButton4, imgButton5, imgButton6, imgButton7, imgButton8;
+    private List<Image> ToolBarButton = new List<Image>();
+    private int WhichSceneOn;
 
     //场景
     private GameObject o0, o1, o2, o3, o4, o5, o6, o7, tool;
@@ -100,8 +106,7 @@ public class StartMenu : MonoBehaviour
         o7 = GameObject.Find("8Conclusion");
         Scene.Add(o7);
         tool = GameObject.Find("ToolBar");
-        tool.SetActive(true);
-        
+
 
         //场景0渲染初始化
         Scene0_0 = GameObject.Find("0_0");
@@ -229,8 +234,22 @@ public class StartMenu : MonoBehaviour
         audiosource = gameObject.AddComponent<AudioSource>();
         AudioClip clip = Resources.Load<AudioClip>("images/sounds/bg_music");
         audiosource.clip = clip;
-        audiosource.Play();
+            //第一个按钮点击以后再播放背景音乐
 
+            //按钮音乐
+        asButton1 = gameObject.AddComponent<AudioSource>();
+        AudioClip clip1 = Resources.Load<AudioClip>("images/sounds/button1");
+        asButton1.clip = clip1;
+
+        asButton2 = gameObject.AddComponent<AudioSource>();
+        AudioClip clip2 = Resources.Load<AudioClip>("images/sounds/button2");
+        asButton2.clip = clip2;
+
+        asButton3 = gameObject.AddComponent<AudioSource>();
+        AudioClip clip3 = Resources.Load<AudioClip>("images/sounds/button3");
+        asButton3.clip = clip3;
+
+        
         //总按钮区块
         List<string> btnsName = new List<string>();
         btnsName.Add("MusicButton");
@@ -247,6 +266,26 @@ public class StartMenu : MonoBehaviour
                 this.OnClick(btnobject);
             });
         }
+
+        //ToolBar
+        imgButton1 = GameObject.Find("Canvas/ToolBar/Button1").GetComponent<Image>();
+        imgButton2 = GameObject.Find("Button2").GetComponent<Image>();
+        imgButton3 = GameObject.Find("Button3").GetComponent<Image>();
+        imgButton4 = GameObject.Find("Button4").GetComponent<Image>();
+        imgButton5 = GameObject.Find("Button5").GetComponent<Image>();
+        imgButton6 = GameObject.Find("Button6").GetComponent<Image>();
+        imgButton7 = GameObject.Find("Button7").GetComponent<Image>();
+        imgButton8 = GameObject.Find("Button8").GetComponent<Image>();
+        imgMusicButton = GameObject.Find("MusicButton").GetComponent<Image>();
+        ToolBarButton.Add(imgButton1);
+        ToolBarButton.Add(imgButton1);
+        ToolBarButton.Add(imgButton2);
+        ToolBarButton.Add(imgButton3);
+        ToolBarButton.Add(imgButton4);
+        ToolBarButton.Add(imgButton5);
+        ToolBarButton.Add(imgButton6);
+        ToolBarButton.Add(imgButton7);
+        ToolBarButton.Add(imgButton8);
 
         //场景0按钮
         List<string> btnsName0 = new List<string>();
@@ -492,6 +531,9 @@ public class StartMenu : MonoBehaviour
         }
         #endregion iniScene
 
+        //等点击第一个按钮以后再显示toolBar
+        tool.SetActive(false);
+
         //初始化激活场景，先激活场景0，在激活0中的0；以后切换场景都这么做，先激活大的，在激活小的
         //OnRender(Scene, 0);
         //OnRender(Scene0, 0);
@@ -516,19 +558,27 @@ public class StartMenu : MonoBehaviour
         {
             case "Button1":
                 Debug.Log("Button1");
+                iniScene1();
                 OnRender(Scene,1);
+                OnRender(Scene1, 0);
                 break;
             case "Button2":
                 Debug.Log("Button2");
+                iniScene2();
                 OnRender(Scene, 2);
+                OnRender(Scene2, 0);
                 break;
             case "Button3":
                 Debug.Log("Button3");
+                iniScene3();
                 OnRender(Scene, 3);
+                OnRender(Scene3, 0);
                 break;
             case "Button4":
                 Debug.Log("Button4");
+                iniScene4();
                 OnRender(Scene, 4);
+                OnRender(Scene4, 0);
                 break;
             case "Button5":
                 Debug.Log("Button5");
@@ -536,7 +586,9 @@ public class StartMenu : MonoBehaviour
                 break;
             case "Button6":
                 Debug.Log("Button6");
+                iniScene6();
                 OnRender(Scene, 6);
+                OnRender(Scene6, 0);
                 break;
             case "Button7":
                 Debug.Log("Button7");
@@ -544,7 +596,9 @@ public class StartMenu : MonoBehaviour
                 break;
             case "Button8":
                 Debug.Log("Button8");
+                iniScene8();
                 OnRender(Scene, 7);
+                OnRender(Scene8, 0);
                 break;
             case "MusicButton":
                 {
@@ -552,15 +606,40 @@ public class StartMenu : MonoBehaviour
                     if (audiosource.isPlaying)
                     {
                         audiosource.Stop();
+                        imgMusicButton.sprite = Resources.Load<Sprite>("Images/ui/MusicButtonOff");
                     }
                     else
                     {
                         audiosource.Play();
+                        imgMusicButton.sprite = Resources.Load<Sprite>("Images/ui/MusicButtonOn");
                     }
                     break;
                 }
             case "StartButton":
                 Debug.Log("StartButton");
+                break;
+            default:
+                Debug.Log("none");
+                break;
+        }
+    }
+    //按钮点击音效
+    public void ButtonClickAudio()
+    {
+        int randomNum = Random.Range(1, 4);
+        switch (randomNum)
+        {
+            case 1:
+                Debug.Log("play asButton1");
+                asButton1.Play();
+                break;
+            case 2:
+                Debug.Log("play asButton2");
+                asButton2.Play();
+                break;
+            case 3:
+                Debug.Log("play asButton3");
+                asButton3.Play();
                 break;
             default:
                 Debug.Log("none");
@@ -576,10 +655,15 @@ public class StartMenu : MonoBehaviour
         {
             case "StartButton1":
                 Debug.Log("0_0");
+                audiosource.Play();
+                tool.SetActive(true);
+                ButtonClickAudio();
                 OnRender(Scene0, 1);
                 break;
             case "StartButton2":
                 Debug.Log("0_1");
+                ButtonClickAudio();
+                iniScene1();
                 OnRender(Scene, 1);
                 OnRender(Scene1, 0);
                 break;
@@ -587,6 +671,12 @@ public class StartMenu : MonoBehaviour
                 Debug.Log("none");
                 break;
         }
+    }
+
+    //场景0初始化
+    public void iniScene0()
+    {
+        //好像没有必要，先留着
     }
     #endregion Scene0
     #region Scene1
@@ -598,36 +688,44 @@ public class StartMenu : MonoBehaviour
         {
             case "TrickButton1":
                 Debug.Log("TrickButton1");
+                ButtonClickAudio();
                 OnRender(Scene1, 1);
                 break;
             case "CooperateButton1":
                 Debug.Log("CooperateButton1");
+                ButtonClickAudio();
                 OnRender(Scene1, 2);
                 break;
             case "TrickButton2":
                 Debug.Log("TrickButton2");
+                ButtonClickAudio();
                 OnRender(Scene1, 3);
                 break;
             case "CooperateButton2":
                 Debug.Log("CooperateButton2");
+                ButtonClickAudio();
                 OnRender(Scene1, 4);
                 break;
             case "TrickButton3":
                 Debug.Log("TrickButton3");
+                ButtonClickAudio();
                 OnRender(Scene1, 3);
                 break;
             case "CooperateButton3":
                 Debug.Log("CooperateButton3");
+                ButtonClickAudio();
                 OnRender(Scene1, 4);
                 break;
             case "NextButton1":
                 Debug.Log("NextButton1");
+                ButtonClickAudio();
                 OnRender(Scene, 2);
                 OnRender(Scene2, 0);
                 iniScene2();
                 break;
             case "NextButton2":
                 Debug.Log("NextButton2");
+                ButtonClickAudio();
                 OnRender(Scene, 2);
                 OnRender(Scene2, 0);
                 iniScene2();
@@ -636,6 +734,10 @@ public class StartMenu : MonoBehaviour
                 Debug.Log("none");
                 break;
         }
+    }
+    public void iniScene1()
+    {
+        ShowImgToolBar(1);
     }
     #endregion Scene1
     #region Scene2
@@ -649,6 +751,7 @@ public class StartMenu : MonoBehaviour
         ScorePerRound1 = 0;//开始的时候玩家积分为0
         ScorePerRound2 = 0;//开始的时候电脑积分为0
         TotalScore = 0;
+        ShowImgToolBar(2);
     }
 
     //场景2的点击处理
@@ -658,23 +761,28 @@ public class StartMenu : MonoBehaviour
         {
             case "TrickButton4":
                 Debug.Log("TrickButton4");
+                ButtonClickAudio();
                 Choose.Add(0);
                 ClickNum += 1;
                 Solve2(0);                
                 break;
             case "CooperateButton4":
                 Debug.Log("CooperateButton4");
+                ButtonClickAudio();
                 Choose.Add(1);
                 ClickNum += 1;
                 Solve2(1);               
                 break;
             case "NextButton3":
                 Debug.Log("NextButton3");
+                ButtonClickAudio();
                 OnRender(Scene2, 1);
                 break;
             case "NextButton4":
                 Debug.Log("NextButton4");
+                ButtonClickAudio();
                 //进入场景3
+                iniScene3();
                 OnRender(Scene, 3);
                 OnRender(Scene3, 0);
                 break;
@@ -867,86 +975,119 @@ public class StartMenu : MonoBehaviour
     }
     #endregion Scene2
     #region Scene3
+    public void iniScene3()
+    {
+        ShowImgToolBar(3);
+
+        Button1Scene4.interactable = true;
+        Button2Scene4.interactable = false;
+        Button3Scene4.interactable = false;
+
+        TextName1.text = "复读机";
+        TextName2.text = "复读机";
+
+        //场景3数据初始化
+        //1--复读机，2-万年小粉红，3-千年老油条，4-黑帮老铁，5-福尔摩星
+        ChoiceNumScene3 = 0;
+    }
     public void OnClick3(GameObject sender)
     {
         switch (sender.name)
         {
             case "ChoiceButton1":
                 Debug.Log("ChoiceButton1");
+                ButtonClickAudio();
                 ChoiceNumScene3 = 1;
                 Scene3ShowChoiceNmae();
                 OnRender(Scene3, 1);
                 break;
             case "ChoiceButton2":
                 Debug.Log("ChoiceButton2");
+                ButtonClickAudio();
                 ChoiceNumScene3 = 2;
                 Scene3ShowChoiceNmae();
                 OnRender(Scene3, 1);
                 break;
             case "ChoiceButton3":
                 Debug.Log("ChoiceButton3");
+                ButtonClickAudio();
                 ChoiceNumScene3 = 3;
                 Scene3ShowChoiceNmae();
                 OnRender(Scene3, 1);
                 break;
             case "ChoiceButton4":
                 Debug.Log("ChoiceButton4");
+                ButtonClickAudio();
                 ChoiceNumScene3 = 4;
                 Scene3ShowChoiceNmae();
                 OnRender(Scene3, 1);
                 break;
             case "ChoiceButton5":
                 Debug.Log("ChoiceButton5");
+                ButtonClickAudio();
                 ChoiceNumScene3 = 5;
                 Scene3ShowChoiceNmae();
                 OnRender(Scene3, 1);
                 break;
             case "NextButton5":
                 Debug.Log("NextButton5");
+                ButtonClickAudio();
                 OnRender(Scene3, 2);
                 break;
             case "NextButton6":
                 Debug.Log("NextButton6");
+                ButtonClickAudio();
                 OnRender(Scene3, 3);
                 break;
             case "NextButton7":
                 Debug.Log("NextButton7");
+                ButtonClickAudio();
                 OnRender(Scene3, 4);
                 break;
             case "NextButton8":
                 Debug.Log("NextButton8");
+                ButtonClickAudio();
                 OnRender(Scene3, 5);
                 break;
             case "NextButton9":
                 Debug.Log("NextButton9");
+                ButtonClickAudio();
                 OnRender(Scene3, 6);
                 break;
             case "NextButton10":
                 Debug.Log("NextButton10");
+                ButtonClickAudio();
                 OnRender(Scene3, 7);
                 break;
             case "NextButton11":
                 Debug.Log("NextButton11");
+                ButtonClickAudio();
                 OnRender(Scene3, 8);
                 break;
             case "NextButton12":
                 Debug.Log("NextButton12");
+                ButtonClickAudio();
                 OnRender(Scene3, 9);
                 break;
             case "NextButton13":
                 Debug.Log("NextButton13");
+                ButtonClickAudio();
                 OnRender(Scene3, 10);
                 break;
             case "NextButton14":
                 Debug.Log("NextButton14");
+                ButtonClickAudio();
                 OnRender(Scene3, 11);
                 break;
             case "NextButton15":
                 Debug.Log("NextButton15");
+                ButtonClickAudio();
                 OnRender(Scene3, 12);
                 break;
             case "NextButton16":
                 Debug.Log("NextButton16");
+                ButtonClickAudio();
+                iniScene4();
                 OnRender(Scene, 4);
                 OnRender(Scene4, 0);
                 break;
@@ -992,34 +1133,55 @@ public class StartMenu : MonoBehaviour
     }
     #endregion Scene3
     #region Scene4
+    public void iniScene4()
+    {
+        ShowImgToolBar(4);
+        
+        TextName3.text = "hello world";
+        TextName5.text = "";
+        imgTemp.enabled = true;
+
+        //场景4数据初始化
+        //1--万年小粉红，2-千年老油条，3-复读机
+        ChoiceNumScene4 = 0;
+        //动画按钮点击数量
+        ClickNumScene4 = 0;
+        //按钮24的点击次数，用来切换画面
+        NextButton24ClickNum = 0;
+    }
     public void OnClick4(GameObject sender)
     {
         switch (sender.name)
         {
             case "ChoiceButton6":
                 Debug.Log("ChoiceButton6");
+                ButtonClickAudio();
                 ChoiceNumScene4 = 1;
                 Scene4ShowChoiceNmae();
                 OnRender(Scene4, 2);
                 break;
             case "ChoiceButton7":
                 Debug.Log("ChoiceButton7");
+                ButtonClickAudio();
                 ChoiceNumScene4 = 2;
                 Scene4ShowChoiceNmae();
                 OnRender(Scene4, 2);
                 break;
             case "ChoiceButton8":
                 Debug.Log("ChoiceButton8");
+                ButtonClickAudio();
                 ChoiceNumScene4 = 3;
                 Scene4ShowChoiceNmae();
                 OnRender(Scene4, 2);
                 break;
             case "NextButton17":
                 Debug.Log("NextButton17");
+                ButtonClickAudio();
                 OnRender(Scene4, 1);
                 break;
             case "NextButton18":
                 Debug.Log("NextButton18");
+                ButtonClickAudio();
                 ClickNumScene4 += 1;
                 Scene4Evlution();
                 ani1.SetInteger("AnimationNum", ClickNumScene4);
@@ -1028,6 +1190,7 @@ public class StartMenu : MonoBehaviour
                 break;
             case "NextButton19":
                 Debug.Log("NextButton19");
+                ButtonClickAudio();
                 ClickNumScene4 += 1;
                 Scene4Evlution();
                 ani1.SetInteger("AnimationNum", ClickNumScene4);
@@ -1036,6 +1199,7 @@ public class StartMenu : MonoBehaviour
                 break;
             case "NextButton20":
                 Debug.Log("NextButton20");
+                ButtonClickAudio();
                 ClickNumScene4 += 1;
                 Scene4Evlution();
                 ani1.SetInteger("AnimationNum", ClickNumScene4);
@@ -1044,10 +1208,12 @@ public class StartMenu : MonoBehaviour
                 break;
             case "NextButton21":
                 Debug.Log("NextButton21");
+                ButtonClickAudio();
                 OnRender(Scene4, 4);
                 break;
             case "NextButton22":
                 Debug.Log("NextButton22");
+                ButtonClickAudio();
                 TextName5.text = "（注意：有少数<color=yellow>黑帮老铁</color>可能会一直留下来，因为除了<color=yellow>黑帮老铁</color>和<color=#007FFF>复读机</color>之外所有人都被消灭了，他们两个会达成平局。）\n\n" +
                 "所以，看起来博弈论的道理好像在告诉我们这些事情：像<color=#007FFF>复读机</color>这样「己所不欲勿施于人」的人生哲学不仅仅是道德层面上的真理，同时也是科学上的真理。然而...";
                 ani2.SetTrigger("isClicked");
@@ -1056,6 +1222,7 @@ public class StartMenu : MonoBehaviour
                 break;
             case "NextButton23":
                 Debug.Log("NextButton23");
+                ButtonClickAudio();
                 OnRender(Scene4, 5);
                 TextBox1.text = "看看你周围，这个世界上简直充满了无赖。\n\n"+
 
@@ -1066,6 +1233,7 @@ public class StartMenu : MonoBehaviour
                 break;
             case "NextButton24":
                 Debug.Log("NextButton24");
+                ButtonClickAudio();
                 NextButton24ClickNum += 1;
                 if(NextButton24ClickNum == 1)
                 {
@@ -1171,36 +1339,56 @@ public class StartMenu : MonoBehaviour
 
     #endregion Scene4
     #region Scene6
+    public void iniScene6()
+    {
+        ShowImgToolBar(6);
+        //场景六文本显示初始化
+        SliderNumber.text = "0";
+        Text4.text = "<color=#A8D0FF>复读鸭</color>";
+        Text5.text = "<color=#9ce354>一根筋</color>";
+        Text6.text = "<color=#9ce354>一根筋</color>";
+        //6_6场景是否选到正确选项
+        Correct6_6 = false;
+        //6_7场景是否选到正确选项
+        Correct6_7 = false;
+    }
     public void OnClick6(GameObject sender)
     {
         switch (sender.name)
         {
             case "NextButton6_0":
                 Debug.Log("Finish 6_0");
+                ButtonClickAudio();
                 OnRender(Scene6, 1);
                 break;
             case "NextButton6_1":
                 Debug.Log("Finish 6_1");
+                ButtonClickAudio();
                 OnRender(Scene6, 2);
                 break;
             case "NextButton6_2":
                 Debug.Log("Finish 6_2");
+                ButtonClickAudio();
                 OnRender(Scene6, 3);
                 break;
             case "NextButton6_3":
                 Debug.Log("Finish 6_3");
+                ButtonClickAudio();
                 OnRender(Scene6, 4);
                 break;
             case "NextButton6_4":
                 Debug.Log("Finish 6_4");
+                ButtonClickAudio();
                 OnRender(Scene6, 5);
                 break;
             case "NextButton6_5":
                 Debug.Log("Finish 6_5");
+                ButtonClickAudio();
                 OnRender(Scene6, 6);
                 break;
             case "NextButton6_6_1":
                 Debug.Log("Finish 6_6_1");
+                ButtonClickAudio();
                 if (Correct6_6 == true)
                 {
                     OnRender(Scene6, 8);
@@ -1212,14 +1400,17 @@ public class StartMenu : MonoBehaviour
                 break;
             case "NextButton6_6_2":
                 Debug.Log("Finish 6_6_2");
+                ButtonClickAudio();
                 OnRender(Scene6, 10);
                 break;
             case "NextButton6_6_3":
                 Debug.Log("Finish 6_6_3");
+                ButtonClickAudio();
                 OnRender(Scene6, 10);
                 break;
             case "NextButton6_7_1":
                 Debug.Log("Finish 6_7_1");
+                ButtonClickAudio();
                 if (Correct6_7 == true)
                 {
                     OnRender(Scene6, 12);
@@ -1231,21 +1422,26 @@ public class StartMenu : MonoBehaviour
                 break;
             case "NextButton6_7_2":
                 Debug.Log("Finish 6_6_3");
+                ButtonClickAudio();
                 OnRender(Scene6, 14);
                 break;
             case "NextButton6_7_3":
                 Debug.Log("Finish 6_6_3");
+                ButtonClickAudio();
                 OnRender(Scene6, 14);
                 break;
             case "NextButton6_8_0":
                 Debug.Log("Finish 6_8_0");
+                ButtonClickAudio();
                 OnRender(Scene6, 15);
                 break;
             case "NextButton6_8_1":
                 Debug.Log("Finish 6_8_1");
+                ButtonClickAudio();
                 OnRender(Scene, 7);
                 break;
             case "ChoiceButton6_6_0_1":
+                ButtonClickAudio();
                 Debug.Log("Finish 6_6_0 with choice 1");
                 Text1.text = Text3.text = "<color=#A8D0FF>复读鸭</color>";
                 Correct6_6 = false;
@@ -1253,6 +1449,7 @@ public class StartMenu : MonoBehaviour
                 OnRender(Scene6, 7);
                 break;
             case "ChoiceButton6_6_0_2":
+                ButtonClickAudio();
                 Debug.Log("Finish 6_6_0 with choice 2");
                 Text1.text = Text2.text = "<color=#9ce354>一根筋</color>";
                 Correct6_6 = true;
@@ -1260,6 +1457,7 @@ public class StartMenu : MonoBehaviour
                 OnRender(Scene6, 7);
                 break;
             case "ChoiceButton6_6_0_3":
+                ButtonClickAudio();
                 Debug.Log("Finish 6_6_0 with choice 3");
                 Text1.text = Text3.text = "<color=#ff5e5e>胡乱来</color>";
                 Correct6_6 = false;
@@ -1267,6 +1465,7 @@ public class StartMenu : MonoBehaviour
                 OnRender(Scene6, 7);
                 break;
             case "ChoiceButton6_6_0_4":
+                ButtonClickAudio();
                 Debug.Log("Finish 6_6_0 with choice 4");
                 Text1.text = Text3.text = "<color=#4089dd>复读机</color>";
                 Correct6_6 = false;
@@ -1274,6 +1473,7 @@ public class StartMenu : MonoBehaviour
                 OnRender(Scene6, 7);
                 break;
             case "ChoiceButton6_6_0_5":
+                ButtonClickAudio();
                 Debug.Log("Finish 6_6_0 with choice 5");
                 Text1.text = Text3.text = "<color=#ffd3ff>万年小粉红</color>";
                 Text1.fontSize = Text3.fontSize = 12;
@@ -1281,6 +1481,7 @@ public class StartMenu : MonoBehaviour
                 OnRender(Scene6, 7);
                 break;
             case "ChoiceButton6_7_0_1":
+                ButtonClickAudio();
                 Debug.Log("Finish 6_7_0 with choice 1");
                 Text4.text = Text5.text = "<color=#A8D0FF>复读鸭</color>";
                 Correct6_7 = true;
@@ -1288,6 +1489,7 @@ public class StartMenu : MonoBehaviour
                 OnRender(Scene6, 11);
                 break;
             case "ChoiceButton6_7_0_2":
+                ButtonClickAudio();
                 Debug.Log("Finish 6_7_0 with choice 2");
                 Text4.text = Text6.text = "<color=#9ce354>一根筋</color>";
                 Correct6_7 = false;
@@ -1295,6 +1497,7 @@ public class StartMenu : MonoBehaviour
                 OnRender(Scene6, 11);
                 break;
             case "ChoiceButton6_7_0_3":
+                ButtonClickAudio();
                 Debug.Log("Finish 6_7_0 with choice 3");
                 Text4.text = Text6.text = "<color=#ff5e5e>胡乱来</color>";
                 Correct6_7 = false;
@@ -1302,6 +1505,7 @@ public class StartMenu : MonoBehaviour
                 OnRender(Scene6, 11);
                 break;
             case "ChoiceButton6_7_0_4":
+                ButtonClickAudio();
                 Debug.Log("Finish 6_7_0 with choice 4");
                 Text4.text = Text6.text = "<color=#4089dd>复读机</color>";
                 Correct6_7 = false;
@@ -1309,6 +1513,7 @@ public class StartMenu : MonoBehaviour
                 OnRender(Scene6, 11);
                 break;
             case "ChoiceButton6_7_0_5":
+                ButtonClickAudio();
                 Debug.Log("Finish 6_7_0 with choice 5");
                 Text4.text = Text6.text = "<color=#52537f>千年老油条</color>";
                 Text1.fontSize = Text3.fontSize = 12;
@@ -1322,20 +1527,27 @@ public class StartMenu : MonoBehaviour
     }
     #endregion Scene6
     #region Scene8
+    public void iniScene8()
+    {
+        ShowImgToolBar(8);
+    }
     public void OnClick8(GameObject sender)
     {
         switch (sender.name)
         {
             case "NextButton25":
                 Debug.Log("NextButton25");
+                ButtonClickAudio();
                 OnRender(Scene8, 1);
                 break;
             case "NextButton26":
                 Debug.Log("NextButton26");
+                ButtonClickAudio();
                 OnRender(Scene8, 2);
                 break;
             case "NextButton27":
                 Debug.Log("NextButton27");
+                ButtonClickAudio();
                 OnRender(Scene8, 3);
                 break;
             default:
@@ -1353,5 +1565,15 @@ public class StartMenu : MonoBehaviour
             if (i == index) Scene[i].SetActive(true);
             else Scene[i].SetActive(false);
         }
+    }
+
+    //ToolBar按钮图像显示
+    public void ShowImgToolBar(int index)
+    {
+        for (int i = 0; i < ToolBarButton.Count; i++)
+        {
+            if (i == index) ToolBarButton[i].sprite = Resources.Load<Sprite>("Images/ui/sliderButton");
+            else ToolBarButton[i].sprite = Resources.Load<Sprite>("Images/ui/sliderButton2");
+        } 
     }
 }
